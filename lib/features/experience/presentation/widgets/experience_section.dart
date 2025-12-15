@@ -6,6 +6,7 @@ import 'package:portfolio_jps/core/theme/app_spacing.dart';
 import 'package:portfolio_jps/core/utils/responsive.dart';
 import 'package:portfolio_jps/shared/data/experience_data.dart';
 import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
+import 'package:portfolio_jps/shared/widgets/horizontal_carousel.dart';
 import 'package:portfolio_jps/shared/widgets/section_wrapper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -53,17 +54,10 @@ class ExperienceSection extends StatelessWidget {
     BuildContext context,
     List<ExperienceData> experiences,
   ) {
-    return Column(
-      children: experiences.asMap().entries.map((entry) {
-        final index = entry.key;
-        final experience = entry.value;
-
-        return _MobileTimelineItem(
-          experience: experience,
-          isFirst: index == 0,
-          isLast: index == experiences.length - 1,
-          delay: index * 200,
-        );
+    return HorizontalCarousel(
+      itemHeight: 320,
+      items: experiences.map((experience) {
+        return _ExperienceCarouselCard(experience: experience);
       }).toList(),
     );
   }
@@ -318,124 +312,172 @@ class _TimelineItemState extends State<_TimelineItem> {
   }
 }
 
-class _MobileTimelineItem extends StatelessWidget {
-  const _MobileTimelineItem({
+/// Compact experience card for mobile carousel.
+class _ExperienceCarouselCard extends StatelessWidget {
+  const _ExperienceCarouselCard({
     required this.experience,
-    required this.isFirst,
-    required this.isLast,
-    required this.delay,
   });
 
   final ExperienceData experience;
-  final bool isFirst;
-  final bool isLast;
-  final int delay;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark ? AppColors.accent : AppColors.accentLight;
 
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Timeline line
-          SizedBox(
-            width: 30,
-            child: Column(
+    return CodePeekWrapper(
+      componentCode: ComponentCodes.timelineItem,
+      child: Container(
+        width: double.infinity,
+        padding: AppSpacing.paddingAllMd,
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.cardDark : AppColors.cardLight,
+          borderRadius: AppSpacing.borderRadiusLg,
+          border: Border.all(
+            color: isDark
+                ? Colors.white.withValues(alpha: 0.1)
+                : Colors.black.withValues(alpha: 0.08),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header row with date and current badge
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  width: 12,
-                  height: 12,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xxs,
+                  ),
                   decoration: BoxDecoration(
-                    color: experience.isCurrent
-                        ? AppColors.accent
-                        : (isDark ? AppColors.cardDark : AppColors.cardLight),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: AppColors.accent,
-                      width: 2,
+                    color: accentColor.withValues(alpha: 0.1),
+                    borderRadius: AppSpacing.borderRadiusFull,
+                  ),
+                  child: Text(
+                    experience.dateRange,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: accentColor,
                     ),
                   ),
                 ),
-                if (!isLast)
-                  Expanded(
-                    child: Container(
-                      width: 2,
-                      color: AppColors.accent.withValues(alpha: 0.3),
+                if (experience.isCurrent)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.sm,
+                      vertical: AppSpacing.xxs,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.success.withValues(alpha: 0.15),
+                      borderRadius: AppSpacing.borderRadiusFull,
+                      border: Border.all(
+                        color: AppColors.success.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: const BoxDecoration(
+                            color: AppColors.success,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        const Text(
+                          'Current',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.success,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
               ],
             ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          // Content
-          Expanded(
-            child: CodePeekWrapper(
-              componentCode: ComponentCodes.timelineItem,
-              child: Container(
-                margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-                padding: AppSpacing.paddingAllMd,
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.cardDark : AppColors.cardLight,
-                  borderRadius: AppSpacing.borderRadiusMd,
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.1)
-                        : Colors.black.withValues(alpha: 0.05),
+            const SizedBox(height: AppSpacing.md),
+            // Company name
+            Text(
+              experience.company,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
-                ),
-                child: Column(
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: AppSpacing.xxs),
+            // Role
+            Text(
+              experience.role,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    color: accentColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: AppSpacing.md),
+            // Description
+            Expanded(
+              child: Text(
+                experience.description,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondaryLight,
+                      height: 1.5,
+                    ),
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            // Achievements preview (first 2)
+            ...experience.achievements.take(2).map((achievement) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      experience.dateRange,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.accent,
+                    const Icon(
+                      Icons.check_circle,
+                      size: 14,
+                      color: AppColors.success,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        achievement,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.textSecondaryLight,
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      experience.company,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                    Text(
-                      experience.role,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.accent,
-                          ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
-                    Text(
-                      experience.description,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondaryLight,
-                          ),
                     ),
                   ],
                 ),
-              ),
-            ),
-          ),
-        ],
+              );
+            }),
+          ],
+        ),
       ),
-    )
-        .animate()
-        .fadeIn(
-          delay: Duration(milliseconds: delay),
-          duration: 500.ms,
-        )
-        .slideX(
-          begin: 0.2,
-          end: 0,
-          delay: Duration(milliseconds: delay),
-          duration: 500.ms,
-        );
+    );
   }
 }

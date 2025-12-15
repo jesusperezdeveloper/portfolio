@@ -5,6 +5,25 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.0.5] - 2025-12-16
+
+### Agregado
+- Widget `HorizontalCarousel` reutilizable con animaciones de escala y opacidad
+- Indicadores de página (dots) animados con soporte de tema claro/oscuro
+- Efecto peek para mostrar items adyacentes en el carrusel
+- Tarjeta compacta `ExperienceCarouselCard` para móvil con badge "Current"
+
+### Cambiado
+- Sección Proyectos en móvil: carrusel horizontal en lugar de lista vertical
+- Sección Experiencia en móvil: carrusel horizontal con tarjetas compactas
+- Reducción significativa del scroll vertical en móvil (~60%)
+- Mejor UX con gestos de swipe nativos
+
+### Técnico
+- PageView con viewportFraction para efecto peek
+- AnimatedScale y AnimatedOpacity sincronizados con scroll
+- Soporte completo para temas claro/oscuro en indicadores
+
 ## [1.0.4] - 2025-12-15
 
 ### Cambiado

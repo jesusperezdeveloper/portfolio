@@ -4,6 +4,7 @@ import 'package:portfolio_jps/core/theme/app_spacing.dart';
 import 'package:portfolio_jps/core/utils/responsive.dart';
 import 'package:portfolio_jps/shared/data/projects_data.dart';
 import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
+import 'package:portfolio_jps/shared/widgets/horizontal_carousel.dart';
 import 'package:portfolio_jps/shared/widgets/project_card_3d.dart';
 import 'package:portfolio_jps/shared/widgets/section_wrapper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,29 +25,30 @@ class ProjectsSection extends StatelessWidget {
       child: LayoutBuilder(
         builder: (context, constraints) {
           if (columns == 1) {
-            // Mobile: Stack vertical
-            return Column(
-              children: projects.map((project) {
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-                  child: Center(
-                    child: CodePeekWrapper(
-                      componentCode: ComponentCodes.projectCard,
-                      child: ProjectCard3D(
-                        title: l10n.translate(project.titleKey),
-                        description: l10n.translate(project.descriptionKey),
-                        imageUrl: project.imageUrl,
-                        techStack: project.techStack,
-                        role: project.role,
-                        width: constraints.maxWidth > 400 ? 380 : constraints.maxWidth - 32,
-                        onViewLive: project.liveUrl != null
-                            ? () => _launchUrl(project.liveUrl!)
-                            : null,
-                        onViewCode: project.codeUrl != null
-                            ? () => _launchUrl(project.codeUrl!)
-                            : null,
-                      ),
-                    ),
+            // Mobile: Horizontal Carousel
+            final cardWidth = constraints.maxWidth > 400
+                ? 340.0
+                : constraints.maxWidth - 48;
+
+            return HorizontalCarousel(
+              itemHeight: 500,
+              viewportFraction: 0.88,
+              items: projects.map((project) {
+                return CodePeekWrapper(
+                  componentCode: ComponentCodes.projectCard,
+                  child: ProjectCard3D(
+                    title: l10n.translate(project.titleKey),
+                    description: l10n.translate(project.descriptionKey),
+                    imageUrl: project.imageUrl,
+                    techStack: project.techStack,
+                    role: project.role,
+                    width: cardWidth,
+                    onViewLive: project.liveUrl != null
+                        ? () => _launchUrl(project.liveUrl!)
+                        : null,
+                    onViewCode: project.codeUrl != null
+                        ? () => _launchUrl(project.codeUrl!)
+                        : null,
                   ),
                 );
               }).toList(),

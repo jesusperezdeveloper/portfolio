@@ -3,9 +3,9 @@ abstract class AppConfig {
   static const String appTitle = 'Portfolio';
 
   // Version Info
-  static const String appVersion = '1.0.4';
-  static const int buildNumber = 5;
-  static const String releaseDate = '2025-12-15';
+  static const String appVersion = '1.0.5';
+  static const int buildNumber = 6;
+  static const String releaseDate = '2025-12-16';
   static const String versionFull = '$appVersion+$buildNumber';
 
   // Personal Info
