@@ -5,6 +5,7 @@ import 'package:portfolio_jps/core/theme/app_colors.dart';
 import 'package:portfolio_jps/core/theme/app_spacing.dart';
 import 'package:portfolio_jps/core/utils/responsive.dart';
 import 'package:portfolio_jps/shared/data/experience_data.dart';
+import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
 import 'package:portfolio_jps/shared/widgets/section_wrapper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -183,17 +184,19 @@ class _TimelineItemState extends State<_TimelineItem> {
   }
 
   Widget _buildContent(BuildContext context, bool isDark) {
-    return MouseRegion(
-      cursor: widget.experience.companyUrl != null
-          ? SystemMouseCursors.click
-          : SystemMouseCursors.basic,
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      child: GestureDetector(
-        onTap: widget.experience.companyUrl != null
-            ? () => _launchUrl(widget.experience.companyUrl!)
-            : null,
-        child: AnimatedContainer(
+    return CodePeekWrapper(
+      componentCode: ComponentCodes.timelineItem,
+      child: MouseRegion(
+        cursor: widget.experience.companyUrl != null
+            ? SystemMouseCursors.click
+            : SystemMouseCursors.basic,
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: GestureDetector(
+          onTap: widget.experience.companyUrl != null
+              ? () => _launchUrl(widget.experience.companyUrl!)
+              : null,
+          child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           margin: EdgeInsets.only(
             left: widget.isLeft ? 0 : AppSpacing.lg,
@@ -303,6 +306,7 @@ class _TimelineItemState extends State<_TimelineItem> {
           ),
         ),
       ),
+      ),
     );
   }
 
@@ -367,52 +371,55 @@ class _MobileTimelineItem extends StatelessWidget {
           const SizedBox(width: AppSpacing.md),
           // Content
           Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(bottom: AppSpacing.lg),
-              padding: AppSpacing.paddingAllMd,
-              decoration: BoxDecoration(
-                color: isDark ? AppColors.cardDark : AppColors.cardLight,
-                borderRadius: AppSpacing.borderRadiusMd,
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.1)
-                      : Colors.black.withValues(alpha: 0.05),
+            child: CodePeekWrapper(
+              componentCode: ComponentCodes.timelineItem,
+              child: Container(
+                margin: const EdgeInsets.only(bottom: AppSpacing.lg),
+                padding: AppSpacing.paddingAllMd,
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.cardDark : AppColors.cardLight,
+                  borderRadius: AppSpacing.borderRadiusMd,
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.1)
+                        : Colors.black.withValues(alpha: 0.05),
+                  ),
                 ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    experience.dateRange,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.accent,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      experience.dateRange,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.accent,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    experience.company,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  Text(
-                    experience.role,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.accent,
-                        ),
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  Text(
-                    experience.description,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : AppColors.textSecondaryLight,
-                        ),
-                  ),
-                ],
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      experience.company,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                    Text(
+                      experience.role,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: AppColors.accent,
+                          ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      experience.description,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: isDark
+                                ? AppColors.textSecondaryDark
+                                : AppColors.textSecondaryLight,
+                          ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

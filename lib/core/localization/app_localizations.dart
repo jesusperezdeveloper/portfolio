@@ -65,6 +65,12 @@ class AppLocalizations {
           'Plataforma completa de gestión para motorsport. Desarrollada para RFME/ESBK, soporta 6 idiomas y gestiona competiciones, equipos y pilotos en tiempo real.',
       'project_paddock_role': 'Fundador & Lead Developer',
 
+      // Project: FutBase
+      'project_futbase_title': 'FutBase',
+      'project_futbase_description':
+          'La plataforma de gestión deportiva más completa. Gestiona equipos, jugadores, entrenamientos, partidos y estadísticas en tiempo real desde cualquier lugar.',
+      'project_futbase_role': 'Founder & Lead Developer',
+
       // Project: KPNTV+
       'project_kpntv_title': 'KPNTV+',
       'project_kpntv_description':
@@ -166,6 +172,12 @@ class AppLocalizations {
       'project_paddock_description':
           'Complete motorsport management platform. Built for RFME/ESBK, supports 6 languages and manages competitions, teams, and riders in real-time.',
       'project_paddock_role': 'Founder & Lead Developer',
+
+      // Project: FutBase
+      'project_futbase_title': 'FutBase',
+      'project_futbase_description':
+          'The most complete sports management platform. Manage teams, players, trainings, matches and real-time statistics from anywhere.',
+      'project_futbase_role': 'Founder & Lead Developer',
 
       // Project: KPNTV+
       'project_kpntv_title': 'KPNTV+',

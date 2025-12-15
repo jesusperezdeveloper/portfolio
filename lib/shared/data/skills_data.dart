@@ -51,7 +51,7 @@ abstract class SkillsData {
         SkillData(
           name: 'Kotlin',
           icon: FontAwesomeIcons.android,
-          level: SkillLevel.advanced,
+          level: SkillLevel.intermediate,
           color: Color(0xFF7F52FF),
         ),
         SkillData(
@@ -65,12 +65,6 @@ abstract class SkillsData {
           icon: FontAwesomeIcons.python,
           level: SkillLevel.advanced,
           color: Color(0xFF3776AB),
-        ),
-        SkillData(
-          name: 'TypeScript',
-          icon: FontAwesomeIcons.js,
-          level: SkillLevel.intermediate,
-          color: Color(0xFF3178C6),
         ),
       ],
     ),
@@ -161,12 +155,6 @@ abstract class SkillsData {
           icon: FontAwesomeIcons.google,
           level: SkillLevel.advanced,
           color: Color(0xFF4285F4),
-        ),
-        SkillData(
-          name: 'AWS',
-          icon: FontAwesomeIcons.aws,
-          level: SkillLevel.intermediate,
-          color: Color(0xFFFF9900),
         ),
         SkillData(
           name: 'Supabase',

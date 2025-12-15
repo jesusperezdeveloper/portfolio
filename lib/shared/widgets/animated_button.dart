@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:portfolio_jps/core/theme/app_colors.dart';
 import 'package:portfolio_jps/core/theme/app_spacing.dart';
 
 enum ButtonVariant { primary, secondary, outline, ghost }
 
+/// A modern animated button with multiple variants.
+///
+/// Supports primary (gradient), secondary (purple), outline (bordered),
+/// and ghost (transparent) variants with smooth hover animations.
 class AnimatedButton extends StatefulWidget {
   const AnimatedButton({
     required this.text,
@@ -44,7 +47,10 @@ class _AnimatedButtonState extends State<AnimatedButton> {
           ? SystemMouseCursors.forbidden
           : SystemMouseCursors.click,
       onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+      onExit: (_) => setState(() {
+        _isHovered = false;
+        _isPressed = false;
+      }),
       child: GestureDetector(
         onTapDown: (_) => setState(() => _isPressed = true),
         onTapUp: (_) => setState(() => _isPressed = false),
@@ -55,98 +61,100 @@ class _AnimatedButtonState extends State<AnimatedButton> {
           curve: Curves.easeOutCubic,
           width: widget.width,
           height: widget.height ?? 52,
-          transform: Matrix4.identity()
-            ..setEntry(0, 0, _isPressed ? 0.95 : (_isHovered ? 1.02 : 1.0))
-            ..setEntry(1, 1, _isPressed ? 0.95 : (_isHovered ? 1.02 : 1.0)),
+          transform: _buildTransform(),
           transformAlignment: Alignment.center,
           decoration: _buildDecoration(isDark),
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: widget.icon != null ? AppSpacing.lg : AppSpacing.xl,
-              vertical: AppSpacing.md,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (widget.isLoading) ...[
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        _getTextColor(isDark),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                ] else if (widget.icon != null) ...[
-                  Icon(
-                    widget.icon,
-                    size: 20,
-                    color: _getTextColor(isDark),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                ],
-                Text(
-                  widget.text,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: _getTextColor(isDark),
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          child: _buildContent(isDark),
         ),
       ),
-    )
-        .animate(target: _isHovered ? 1 : 0)
-        .shimmer(
-          duration: 1.seconds,
-          color: widget.variant == ButtonVariant.primary
-              ? Colors.white.withValues(alpha: 0.1)
-              : Colors.transparent,
-        );
+    );
+  }
+
+  Matrix4 _buildTransform() {
+    // Only apply scale transform to primary and secondary variants
+    if (widget.variant == ButtonVariant.outline ||
+        widget.variant == ButtonVariant.ghost) {
+      return Matrix4.identity();
+    }
+
+    const pressedScale = 0.96;
+    const hoverScale = 1.02;
+    const normalScale = 1.0;
+    final scale = _isPressed ? pressedScale : (_isHovered ? hoverScale : normalScale);
+    return Matrix4.diagonal3Values(scale, scale, normalScale);
+  }
+
+  Widget _buildContent(bool isDark) {
+    final textColor = _getTextColor(isDark);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.xl,
+        vertical: AppSpacing.md,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (widget.isLoading) ...[
+            SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(textColor),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+          ] else if (widget.icon != null) ...[
+            Icon(
+              widget.icon,
+              size: 18,
+              color: textColor,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+          ],
+          Flexible(
+            child: Text(
+              widget.text,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+                letterSpacing: 0.3,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   BoxDecoration _buildDecoration(bool isDark) {
     switch (widget.variant) {
       case ButtonVariant.primary:
         return BoxDecoration(
-          gradient: _isHovered
-              ? LinearGradient(
-                  colors: [
-                    AppColors.accent.withValues(alpha: 0.9),
-                    AppColors.accentDark,
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                )
-              : const LinearGradient(
-                  colors: [AppColors.accent, AppColors.accentDark],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+          gradient: LinearGradient(
+            colors: _isHovered
+                ? [
+                    AppColors.accent.withValues(alpha: 0.85),
+                    AppColors.accentDark.withValues(alpha: 0.95),
+                  ]
+                : [AppColors.accent, AppColors.accentDark],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: AppSpacing.borderRadiusMd,
-          boxShadow: _isHovered
-              ? [
-                  BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.4),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: AppColors.accent.withValues(alpha: 0.2),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accent.withValues(alpha: _isHovered ? 0.5 : 0.25),
+              blurRadius: _isHovered ? 24 : 12,
+              offset: Offset(0, _isHovered ? 8 : 4),
+              spreadRadius: _isHovered ? 2 : 0,
+            ),
+          ],
         );
 
       case ButtonVariant.secondary:
@@ -165,22 +173,34 @@ class _AnimatedButtonState extends State<AnimatedButton> {
         );
 
       case ButtonVariant.outline:
+        // Solid dark background to ensure text renders correctly on Flutter Web
         return BoxDecoration(
           color: _isHovered
-              ? AppColors.accent.withValues(alpha: 0.1)
-              : Colors.transparent,
+              ? AppColors.primaryDark.withValues(alpha: 0.98)
+              : AppColors.primaryDark.withValues(alpha: 0.95),
           borderRadius: AppSpacing.borderRadiusMd,
           border: Border.all(
-            color: AppColors.accent,
-            width: 2,
+            color: _isHovered
+                ? AppColors.accent
+                : AppColors.accent.withValues(alpha: 0.8),
+            width: 1.5,
           ),
+          boxShadow: _isHovered
+              ? [
+                  BoxShadow(
+                    color: AppColors.accent.withValues(alpha: 0.3),
+                    blurRadius: 16,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : null,
         );
 
       case ButtonVariant.ghost:
         return BoxDecoration(
           color: _isHovered
               ? (isDark
-                  ? Colors.white.withValues(alpha: 0.05)
+                  ? Colors.white.withValues(alpha: 0.08)
                   : Colors.black.withValues(alpha: 0.05))
               : Colors.transparent,
           borderRadius: AppSpacing.borderRadiusMd,

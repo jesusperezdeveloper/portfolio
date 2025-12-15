@@ -8,6 +8,7 @@ import 'package:portfolio_jps/features/experience/presentation/widgets/experienc
 import 'package:portfolio_jps/features/hero/presentation/widgets/hero_section.dart';
 import 'package:portfolio_jps/features/projects/presentation/widgets/projects_section.dart';
 import 'package:portfolio_jps/features/skills/presentation/widgets/skills_section.dart';
+import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
 import 'package:portfolio_jps/shared/widgets/custom_app_bar.dart';
 import 'package:portfolio_jps/shared/widgets/footer.dart';
 
@@ -56,56 +57,64 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return KeyboardListener(
-      focusNode: FocusNode()..requestFocus(),
-      onKeyEvent: _handleKeyEvent,
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: CustomAppBar(
-          onNavItemTap: _scrollToSection,
-          scrollController: _scrollController,
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: isDark ? AppColors.heroGradient : null,
-            color: isDark ? null : Theme.of(context).scaffoldBackgroundColor,
-          ),
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                // Hero Section
-                SizedBox(
-                  key: _sectionKeys[0],
-                  child: const HeroSection(),
+    return Stack(
+      children: [
+        KeyboardListener(
+          focusNode: FocusNode()..requestFocus(),
+          onKeyEvent: _handleKeyEvent,
+          child: Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: CustomAppBar(
+              onNavItemTap: _scrollToSection,
+              scrollController: _scrollController,
+            ),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: isDark ? AppColors.heroGradient : null,
+                color: isDark ? null : Theme.of(context).scaffoldBackgroundColor,
+              ),
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    // Hero Section
+                    SizedBox(
+                      key: _sectionKeys[0],
+                      child: HeroSection(
+                        onScrollToSection: _scrollToSection,
+                      ),
+                    ),
+                    // Projects Section
+                    SizedBox(
+                      key: _sectionKeys[1],
+                      child: const ProjectsSection(),
+                    ),
+                    // Experience Section
+                    SizedBox(
+                      key: _sectionKeys[2],
+                      child: const ExperienceSection(),
+                    ),
+                    // Skills Section
+                    SizedBox(
+                      key: _sectionKeys[3],
+                      child: const SkillsSection(),
+                    ),
+                    // Contact Section
+                    SizedBox(
+                      key: _sectionKeys[4],
+                      child: const ContactSection(),
+                    ),
+                    // Footer
+                    const Footer(),
+                  ],
                 ),
-                // Projects Section
-                SizedBox(
-                  key: _sectionKeys[1],
-                  child: const ProjectsSection(),
-                ),
-                // Experience Section
-                SizedBox(
-                  key: _sectionKeys[2],
-                  child: const ExperienceSection(),
-                ),
-                // Skills Section
-                SizedBox(
-                  key: _sectionKeys[3],
-                  child: const SkillsSection(),
-                ),
-                // Contact Section
-                SizedBox(
-                  key: _sectionKeys[4],
-                  child: const ContactSection(),
-                ),
-                // Footer
-                const Footer(),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+        // Code Peek Overlay - listens for component selections
+        const CodePeekOverlay(),
+      ],
     );
   }
 }

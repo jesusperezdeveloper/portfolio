@@ -5,6 +5,40 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.0.3] - 2025-12-15
+
+### Agregado
+- Gradiente claro para Hero section en tema light (`heroGradientLight`)
+- Color de acento para tema claro (`accentLight`) con mejor contraste
+
+### Cambiado
+- Hero section refactorizado para soporte completo de tema claro/oscuro
+- Colores de texto adaptativos en Hero (greeting, role, tagline, scroll indicator)
+- Botón DEV Mode adaptado para visibilidad en tema claro
+- Partículas de fondo se adaptan automáticamente al tema
+
+### Corregido
+- Legibilidad del Hero section en tema claro (antes era ilegible)
+- Botón DEV invisible en tema claro
+
+## [1.0.2] - 2025-12-15
+
+### Agregado
+- Tooltip descriptivo en botón DEV Mode explicando la funcionalidad de explorar código
+- Scroll navigation desde Hero section (Contact Me → Contact, View Projects → Projects)
+- Proyecto FutBase añadido a proyectos destacados
+
+### Cambiado
+- Proyectos destacados reorganizados: PaddockManager, FutBase, KPNTV+ (solo 3)
+- ProjectCard3D mejorado: imagen 200px fija, descripción hasta 5 líneas, mejor distribución
+- AnimatedButton refactorizado: fondo sólido en outline, sin escala en hover para mejor renderizado
+- URLs de redes sociales actualizadas (X: @_jpsdeveloper, LinkedIn corregido)
+- Tech stack de KPNTV+ actualizado: Algolia, TV Streaming
+
+### Corregido
+- Problema de renderizado de texto en botones outline de Flutter Web
+- Dependencias ordenadas alfabéticamente en pubspec.yaml
+
 ## [1.0.1] - 2025-12-15
 
 ### Cambiado

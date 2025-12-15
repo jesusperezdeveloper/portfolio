@@ -8,6 +8,7 @@ import 'package:portfolio_jps/core/theme/app_colors.dart';
 import 'package:portfolio_jps/core/theme/app_spacing.dart';
 import 'package:portfolio_jps/core/theme/theme_cubit.dart';
 import 'package:portfolio_jps/core/utils/responsive.dart';
+import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -90,7 +91,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
               const Spacer(),
               // Navigation Items (Desktop)
               if (!isMobile) ...[
-                _buildNavItems(context, l10n),
+                Flexible(
+                  child: _buildNavItems(context, l10n),
+                ),
                 const SizedBox(width: AppSpacing.lg),
               ],
               // Actions
@@ -158,44 +161,47 @@ class _CustomAppBarState extends State<CustomAppBar> {
       l10n.navContact,
     ];
 
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: items.asMap().entries.map((entry) {
-        final index = entry.key;
-        final title = entry.value;
-        final isHovered = _hoveredIndex == index;
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items.asMap().entries.map((entry) {
+          final index = entry.key;
+          final title = entry.value;
+          final isHovered = _hoveredIndex == index;
 
-        return MouseRegion(
-          cursor: SystemMouseCursors.click,
-          onEnter: (_) => setState(() => _hoveredIndex = index),
-          onExit: (_) => setState(() => _hoveredIndex = -1),
-          child: GestureDetector(
-            onTap: () => widget.onNavItemTap?.call(index),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.sm,
-              ),
-              decoration: BoxDecoration(
-                color: isHovered
-                    ? AppColors.accent.withValues(alpha: 0.1)
-                    : Colors.transparent,
-                borderRadius: AppSpacing.borderRadiusSm,
-              ),
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: isHovered ? FontWeight.w600 : FontWeight.w500,
-                      color: isHovered
-                          ? AppColors.accent
-                          : Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
+          return MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => setState(() => _hoveredIndex = index),
+            onExit: (_) => setState(() => _hoveredIndex = -1),
+            child: GestureDetector(
+              onTap: () => widget.onNavItemTap?.call(index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md,
+                  vertical: AppSpacing.sm,
+                ),
+                decoration: BoxDecoration(
+                  color: isHovered
+                      ? AppColors.accent.withValues(alpha: 0.1)
+                      : Colors.transparent,
+                  borderRadius: AppSpacing.borderRadiusSm,
+                ),
+                child: Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: isHovered ? FontWeight.w600 : FontWeight.w500,
+                        color: isHovered
+                            ? AppColors.accent
+                            : Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                ),
               ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        }).toList(),
+      ),
     );
   }
 
@@ -203,6 +209,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // Dev Mode Toggle
+        if (!isMobile) const DevModeToggle(),
+        if (!isMobile) const SizedBox(width: AppSpacing.sm),
         // Language Toggle
         _buildIconButton(
           context,

@@ -14,7 +14,7 @@ class ProjectCard3D extends StatefulWidget {
     this.onViewLive,
     this.onViewCode,
     this.width = 380,
-    this.height = 450,
+    this.height,
     super.key,
   });
 
@@ -27,7 +27,7 @@ class ProjectCard3D extends StatefulWidget {
   final VoidCallback? onViewLive;
   final VoidCallback? onViewCode;
   final double width;
-  final double height;
+  final double? height;
 
   @override
   State<ProjectCard3D> createState() => _ProjectCard3DState();
@@ -37,9 +37,13 @@ class _ProjectCard3DState extends State<ProjectCard3D> {
   bool _isHovered = false;
   Offset _mousePosition = Offset.zero;
 
+  static const double _defaultHeight = 480;
+
+  double get _effectiveHeight => widget.height ?? _defaultHeight;
+
   double get _rotateX {
     if (!_isHovered) return 0;
-    final centerY = widget.height / 2;
+    final centerY = _effectiveHeight / 2;
     return ((_mousePosition.dy - centerY) / centerY) * -0.1;
   }
 
@@ -71,7 +75,7 @@ class _ProjectCard3DState extends State<ProjectCard3D> {
           duration: const Duration(milliseconds: 150),
           curve: Curves.easeOutCubic,
           width: widget.width,
-          height: widget.height,
+          height: _effectiveHeight,
           transform: Matrix4.identity()
             ..setEntry(3, 2, 0.002)
             ..rotateX(_rotateX)
@@ -107,9 +111,9 @@ class _ProjectCard3DState extends State<ProjectCard3D> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image Section
-                  Expanded(
-                    flex: 3,
+                  // Image Section - altura fija para consistencia
+                  SizedBox(
+                    height: 200,
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -202,9 +206,8 @@ class _ProjectCard3DState extends State<ProjectCard3D> {
                       ],
                     ),
                   ),
-                  // Content Section
+                  // Content Section - ocupa el resto del espacio
                   Expanded(
-                    flex: 2,
                     child: Padding(
                       padding: AppSpacing.paddingAllMd,
                       child: Column(
@@ -221,7 +224,7 @@ class _ProjectCard3DState extends State<ProjectCard3D> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          const SizedBox(height: AppSpacing.xs),
+                          const SizedBox(height: AppSpacing.sm),
                           Expanded(
                             child: Text(
                               widget.description,
@@ -232,12 +235,13 @@ class _ProjectCard3DState extends State<ProjectCard3D> {
                                     color: isDark
                                         ? AppColors.textSecondaryDark
                                         : AppColors.textSecondaryLight,
+                                    height: 1.5,
                                   ),
-                              maxLines: 3,
+                              maxLines: 5,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(height: AppSpacing.sm),
+                          const SizedBox(height: AppSpacing.md),
                           // Tech stack badges
                           Wrap(
                             spacing: AppSpacing.xs,

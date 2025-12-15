@@ -1,7 +1,7 @@
 name: portfolio_jps
 description: Professional portfolio website for Jesús Pérez - Software Developer
 publish_to: 'none'
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -39,10 +39,10 @@ dependencies:
   firebase_core: ^4.2.1
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter
   flutter_animate: ^4.5.2
   flutter_bloc: ^9.1.1
+  flutter_localizations:
+    sdk: flutter
   flutter_svg: ^2.2.3
   font_awesome_flutter: ^10.12.0
   go_router: ^17.0.1

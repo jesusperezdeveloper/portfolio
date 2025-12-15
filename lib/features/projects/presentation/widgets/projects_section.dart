@@ -3,6 +3,7 @@ import 'package:portfolio_jps/core/localization/app_localizations.dart';
 import 'package:portfolio_jps/core/theme/app_spacing.dart';
 import 'package:portfolio_jps/core/utils/responsive.dart';
 import 'package:portfolio_jps/shared/data/projects_data.dart';
+import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
 import 'package:portfolio_jps/shared/widgets/project_card_3d.dart';
 import 'package:portfolio_jps/shared/widgets/section_wrapper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -29,19 +30,22 @@ class ProjectsSection extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.lg),
                   child: Center(
-                    child: ProjectCard3D(
-                      title: l10n.translate(project.titleKey),
-                      description: l10n.translate(project.descriptionKey),
-                      imageUrl: project.imageUrl,
-                      techStack: project.techStack,
-                      role: project.role,
-                      width: constraints.maxWidth > 400 ? 380 : constraints.maxWidth - 32,
-                      onViewLive: project.liveUrl != null
-                          ? () => _launchUrl(project.liveUrl!)
-                          : null,
-                      onViewCode: project.codeUrl != null
-                          ? () => _launchUrl(project.codeUrl!)
-                          : null,
+                    child: CodePeekWrapper(
+                      componentCode: ComponentCodes.projectCard,
+                      child: ProjectCard3D(
+                        title: l10n.translate(project.titleKey),
+                        description: l10n.translate(project.descriptionKey),
+                        imageUrl: project.imageUrl,
+                        techStack: project.techStack,
+                        role: project.role,
+                        width: constraints.maxWidth > 400 ? 380 : constraints.maxWidth - 32,
+                        onViewLive: project.liveUrl != null
+                            ? () => _launchUrl(project.liveUrl!)
+                            : null,
+                        onViewCode: project.codeUrl != null
+                            ? () => _launchUrl(project.codeUrl!)
+                            : null,
+                      ),
                     ),
                   ),
                 );
@@ -55,18 +59,21 @@ class ProjectsSection extends StatelessWidget {
             runSpacing: AppSpacing.lg,
             alignment: WrapAlignment.center,
             children: projects.map((project) {
-              return ProjectCard3D(
-                title: l10n.translate(project.titleKey),
-                description: l10n.translate(project.descriptionKey),
-                imageUrl: project.imageUrl,
-                techStack: project.techStack,
-                role: project.role,
-                onViewLive: project.liveUrl != null
-                    ? () => _launchUrl(project.liveUrl!)
-                    : null,
-                onViewCode: project.codeUrl != null
-                    ? () => _launchUrl(project.codeUrl!)
-                    : null,
+              return CodePeekWrapper(
+                componentCode: ComponentCodes.projectCard,
+                child: ProjectCard3D(
+                  title: l10n.translate(project.titleKey),
+                  description: l10n.translate(project.descriptionKey),
+                  imageUrl: project.imageUrl,
+                  techStack: project.techStack,
+                  role: project.role,
+                  onViewLive: project.liveUrl != null
+                      ? () => _launchUrl(project.liveUrl!)
+                      : null,
+                  onViewCode: project.codeUrl != null
+                      ? () => _launchUrl(project.codeUrl!)
+                      : null,
+                ),
               );
             }).toList(),
           );

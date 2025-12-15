@@ -67,6 +67,20 @@ abstract class AppColors {
     end: Alignment.bottomCenter,
   );
 
+  /// Light theme hero gradient - modern blue to purple gradient
+  static const LinearGradient heroGradientLight = LinearGradient(
+    colors: [
+      Color(0xFFFFFFFF),
+      Color(0xFFF0F4FF),
+      Color(0xFFE8EEFF),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  /// Accent color adjusted for light backgrounds
+  static const Color accentLight = Color(0xFF0095CC);
+
   static const RadialGradient glowGradient = RadialGradient(
     colors: [
       Color(0x4000d4ff),

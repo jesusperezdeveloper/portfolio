@@ -6,25 +6,46 @@ import 'package:portfolio_jps/core/theme/app_colors.dart';
 import 'package:portfolio_jps/core/theme/app_spacing.dart';
 import 'package:portfolio_jps/core/utils/responsive.dart';
 import 'package:portfolio_jps/shared/widgets/animated_button.dart';
+import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
 import 'package:portfolio_jps/shared/widgets/particle_background.dart';
 
 class HeroSection extends StatelessWidget {
-  const HeroSection({super.key});
+  const HeroSection({
+    super.key,
+    this.onScrollToSection,
+  });
+
+  /// Callback to scroll to a specific section by index.
+  /// Index 1 = Projects, Index 4 = Contact
+  final void Function(int index)? onScrollToSection;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final screenHeight = MediaQuery.of(context).size.height;
     final isMobile = Responsive.isMobile(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return SizedBox(
       height: screenHeight,
       width: double.infinity,
       child: Stack(
         children: [
+          // Background gradient for light theme
+          if (!isDark)
+            const Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: AppColors.heroGradientLight,
+                ),
+              ),
+            ),
           // Particle Background
           const Positioned.fill(
-            child: ParticleBackground(),
+            child: CodePeekWrapper(
+              componentCode: ComponentCodes.particleBackground,
+              child: ParticleBackground(),
+            ),
           ),
           // Gradient Overlay
           Positioned.fill(
@@ -32,10 +53,15 @@ class HeroSection extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: RadialGradient(
                   radius: 1.5,
-                  colors: [
-                    Colors.transparent,
-                    AppColors.backgroundDark.withValues(alpha: 0.8),
-                  ],
+                  colors: isDark
+                      ? [
+                          Colors.transparent,
+                          AppColors.backgroundDark.withValues(alpha: 0.8),
+                        ]
+                      : [
+                          Colors.transparent,
+                          AppColors.backgroundLight.withValues(alpha: 0.3),
+                        ],
                 ),
               ),
             ),
@@ -56,7 +82,10 @@ class HeroSection extends StatelessWidget {
                       isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
                   children: [
                     // Availability Badge
-                    _buildAvailabilityBadge(context, l10n)
+                    CodePeekWrapper(
+                      componentCode: ComponentCodes.availabilityBadge,
+                      child: _buildAvailabilityBadge(context, l10n),
+                    )
                         .animate()
                         .fadeIn(delay: 500.ms, duration: 600.ms)
                         .slideY(begin: -0.3, end: 0),
@@ -65,7 +94,7 @@ class HeroSection extends StatelessWidget {
                     Text(
                       l10n.heroGreeting,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: AppColors.accent,
+                            color: isDark ? AppColors.accent : AppColors.accentLight,
                             fontWeight: FontWeight.w500,
                           ),
                       textAlign: isMobile ? TextAlign.center : TextAlign.start,
@@ -95,7 +124,9 @@ class HeroSection extends StatelessWidget {
                       height: 40,
                       child: DefaultTextStyle(
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                  color: AppColors.textSecondaryDark,
+                                  color: isDark
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.textSecondaryLight,
                                 ) ??
                             const TextStyle(),
                         textAlign: isMobile ? TextAlign.center : TextAlign.start,
@@ -132,7 +163,9 @@ class HeroSection extends StatelessWidget {
                       child: Text(
                         l10n.heroTagline,
                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: AppColors.textSecondaryDark,
+                              color: isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.textSecondaryLight,
                               height: 1.6,
                             ),
                         textAlign: isMobile ? TextAlign.center : TextAlign.start,
@@ -148,26 +181,30 @@ class HeroSection extends StatelessWidget {
                       runSpacing: AppSpacing.md,
                       alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
                       children: [
-                        AnimatedButton(
-                          text: l10n.heroCtaContact,
-                          onPressed: () {
-                            // Scroll to contact section
-                          },
-                          icon: Icons.send,
-                        ),
-                        AnimatedButton(
-                          text: l10n.heroCtaProjects,
-                          variant: ButtonVariant.outline,
-                          onPressed: () {
-                            // Scroll to projects section
-                          },
-                          icon: Icons.work_outline,
-                        ),
+                        CodePeekWrapper(
+                          componentCode: ComponentCodes.animatedButton,
+                          child: AnimatedButton(
+                            text: l10n.heroCtaContact,
+                            onPressed: () => onScrollToSection?.call(4),
+                            icon: Icons.send,
+                          ),
+                        )
+                            .animate()
+                            .fadeIn(delay: 2200.ms, duration: 600.ms)
+                            .slideY(begin: 0.3, end: 0),
+                        CodePeekWrapper(
+                          componentCode: ComponentCodes.animatedButton,
+                          child: AnimatedButton(
+                            text: l10n.heroCtaProjects,
+                            variant: ButtonVariant.outline,
+                            onPressed: () => onScrollToSection?.call(1),
+                            icon: Icons.work_outline,
+                          ),
+                        )
+                            .animate()
+                            .fadeIn(delay: 2400.ms, duration: 600.ms),
                       ],
-                    )
-                        .animate()
-                        .fadeIn(delay: 2200.ms, duration: 600.ms)
-                        .slideY(begin: 0.3, end: 0),
+                    ),
                   ],
                 ),
               ),
@@ -179,7 +216,7 @@ class HeroSection extends StatelessWidget {
             left: 0,
             right: 0,
             child: Center(
-              child: _buildScrollIndicator()
+              child: _buildScrollIndicator(isDark)
                   .animate(onPlay: (controller) => controller.repeat())
                   .slideY(
                     begin: 0,
@@ -245,13 +282,13 @@ class HeroSection extends StatelessWidget {
     );
   }
 
-  Widget _buildScrollIndicator() {
-    return const Column(
+  Widget _buildScrollIndicator(bool isDark) {
+    return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           Icons.keyboard_arrow_down,
-          color: AppColors.textMutedDark,
+          color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight,
           size: 32,
         ),
       ],

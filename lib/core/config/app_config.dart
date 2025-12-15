@@ -3,8 +3,8 @@ abstract class AppConfig {
   static const String appTitle = 'Portfolio';
 
   // Version Info
-  static const String appVersion = '1.0.1';
-  static const int buildNumber = 2;
+  static const String appVersion = '1.0.3';
+  static const int buildNumber = 4;
   static const String releaseDate = '2025-12-15';
   static const String versionFull = '$appVersion+$buildNumber';
 
@@ -12,14 +12,14 @@ abstract class AppConfig {
   static const String fullName = 'Jesús Pérez';
   static const String role = 'Software Developer';
   static const String tagline = 'Building beautiful, performant mobile experiences';
-  static const String email = 'jesus.perez.developer@gmail.com  ';
+  static const String email = 'jesus.perez.developer@gmail.com';
   static const String phone = '+34 654564278';
   static const String location = 'Jerez de la Frontera, Cádiz, Spain';
 
   // Social Links
   static const String githubUrl = 'https://github.com/jesusperezdeveloper';
-  static const String linkedInUrl = 'https://www.linkedin.com/in/jesus-perez-sanchez-dev';
-  static const String twitterUrl = 'https://twitter.com/jpsdeveloper';
+  static const String linkedInUrl = 'https://www.linkedin.com/in/jesus-perez-sanchez-dev/';
+  static const String twitterUrl = 'https://x.com/_jpsdeveloper';
 
   // External URLs
   static const String resumeUrl = 'https://example.com/resume.pdf';

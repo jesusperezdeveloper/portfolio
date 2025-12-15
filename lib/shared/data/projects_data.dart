@@ -24,13 +24,23 @@ class ProjectData {
 
 abstract class ProjectsData {
   static const List<ProjectData> projects = [
+    // Featured projects (orden: PaddockManager, FutBase, KPNTV+)
     ProjectData(
       id: 'paddock-manager',
       titleKey: 'project_paddock_title',
       descriptionKey: 'project_paddock_description',
       role: 'Founder & Lead Developer',
-      techStack: ['Flutter', 'Firebase', 'BLoC', 'Clean Architecture', 'i18n'],
-      liveUrl: 'https://paddockmanager.app',
+      techStack: ['Flutter', 'Firebase', 'BLoC', 'Clean Architecture'],
+      liveUrl: 'https://paddockmanager.com/',
+      featured: true,
+    ),
+    ProjectData(
+      id: 'futbase',
+      titleKey: 'project_futbase_title',
+      descriptionKey: 'project_futbase_description',
+      role: 'CoFounder & Developer',
+      techStack: ['Flutter', 'Firebase', 'Real-time Stats', 'BLoC'],
+      liveUrl: 'https://futbase.es',
       featured: true,
     ),
     ProjectData(
@@ -38,9 +48,10 @@ abstract class ProjectsData {
       titleKey: 'project_kpntv_title',
       descriptionKey: 'project_kpntv_description',
       role: 'Flutter Developer @ Accenture',
-      techStack: ['Flutter', 'GraphQL', 'Video Player', 'Analytics'],
+      techStack: ['Flutter', 'Algolia', 'Video Player', 'TV Streaming'],
       featured: true,
     ),
+    // Non-featured projects
     ProjectData(
       id: 'bit2me',
       titleKey: 'project_bit2me_title',
@@ -48,7 +59,6 @@ abstract class ProjectsData {
       role: 'Flutter Developer',
       techStack: ['Flutter', 'Secure Auth', 'Crypto APIs', 'BLoC'],
       liveUrl: 'https://bit2me.com',
-      featured: true,
     ),
     ProjectData(
       id: 'risk-engineers',
@@ -56,7 +66,6 @@ abstract class ProjectsData {
       descriptionKey: 'project_risk_description',
       role: 'Software Developer @ SlashMobility',
       techStack: ['Flutter', 'Clean Architecture', 'BLoC', 'REST APIs'],
-      featured: true,
     ),
   ];
 

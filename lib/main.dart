@@ -6,6 +6,7 @@ import 'package:portfolio_jps/core/localization/locale_cubit.dart';
 import 'package:portfolio_jps/core/router/app_router.dart';
 import 'package:portfolio_jps/core/theme/app_theme.dart';
 import 'package:portfolio_jps/core/theme/theme_cubit.dart';
+import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ class PortfolioApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => ThemeCubit()),
         BlocProvider(create: (_) => LocaleCubit()),
+        BlocProvider(create: (_) => DevModeCubit()),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
