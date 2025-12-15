@@ -95,7 +95,7 @@ Comandos disponibles:
 ║  Jesús Pérez                                             ║
 ║  Software Developer                                      ║
 ╠══════════════════════════════════════════════════════════╣
-║  5+ años de experiencia en desarrollo móvil              ║
+║  10+ años de experiencia en desarrollo móvil             ║
 ║  Especializado en Flutter, Clean Architecture y BLoC     ║
 ║  Fundador de Paddock Manager                             ║
 ║  Master en Inteligencia Artificial (Founderz 2025)       ║

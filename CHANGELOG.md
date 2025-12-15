@@ -5,6 +5,13 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.0.4] - 2025-12-15
+
+### Cambiado
+- Años de experiencia actualizados de 5+ a 10+ en toda la aplicación
+- Meta tags SEO (description, og:description, twitter:description)
+- Terminal easter egg (comando about)
+
 ## [1.0.3] - 2025-12-15
 
 ### Agregado
