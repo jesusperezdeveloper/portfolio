@@ -1,7 +1,7 @@
 name: portfolio_jps
 description: Professional portfolio website for Jesús Pérez - Software Developer
 publish_to: 'none'
-version: 1.0.2+3
+version: 2.0.0+7
 
 environment:
   sdk: '>=3.2.0 <4.0.0'

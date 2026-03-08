@@ -1,0 +1,70 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "WebFetch(domain:*)"
+    ]
+  },
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": {
+          "tool_name": "Bash",
+          "command_pattern": "git commit"
+        },
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-commit-lint.sh",
+            "blocking": true,
+            "timeout": 60000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/on-session-end.sh",
+            "blocking": false,
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  },
+  "stitch": {
+    "projectId": "",
+    "deviceType": "DESKTOP",
+    "modelId": "GEMINI_3_PRO"
+  },
+  "veg": {
+    "enabled": true,
+    "image_provider": {
+      "primary": "canva",
+      "fallback": "lansespirit",
+      "maxImagesPerScreen": 5,
+      "defaultAspectRatio": "16:9",
+      "stockSearchFirst": false
+    },
+    "motion": {
+      "enabled": true,
+      "flutter": {
+        "package": "flutter_animate",
+        "version": "^4.5.2"
+      }
+    },
+    "defaults": {
+      "fallback_mode": "uniform",
+      "fallback_motion_level": "moderate"
+    }
+  }
+}

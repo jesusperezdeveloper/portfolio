@@ -5,6 +5,25 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/).
 
+## [1.0.6] - 2025-12-16
+
+### Agregado
+- Nueva seccion "Sobre Mi" / "About Me" entre Hero y Projects
+- Stats cards animadas: +10 anos experiencia, +10 proyectos, +5 tecnologias
+- Descripcion personal en 3 parrafos (ES/EN)
+- Navegacion "About" en appbar desktop y menu mobile
+
+### Cambiado
+- Copywriting Hero mejorado: tagline mas impactante con +10 anos experiencia
+- Role actualizado a "Senior Flutter Developer"
+- CTAs mas accionables: "Hablemos" / "Let's Talk", "Ver Portfolio" / "View Portfolio"
+- Roles animados actualizados: Flutter Specialist, Clean Architecture Advocate, Mobile Craftsman, Performance Obsessed
+- Indices de navegacion ajustados para nueva seccion About
+
+### Corregido
+- Skills cards responsive: ancho adaptativo segun viewport (140/150/160px)
+- Texto de skills no se corta: maxLines + overflow ellipsis
+
 ## [1.0.5] - 2025-12-16
 
 ### Agregado

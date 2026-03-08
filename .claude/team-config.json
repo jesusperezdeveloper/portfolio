@@ -1,0 +1,39 @@
+{
+  "$schema": "SDD-JPS Engine v3.9.1 - Agent Teams Configuration",
+  "team": {
+    "name": "jpsdeveloper-portfolio",
+    "description": "Equipo de desarrollo para Portfolio Web - Jesus Perez San"
+  },
+  "orchestrator": {
+    "model": "opus",
+    "maxContextBudget": "15%",
+    "canDelegate": true,
+    "canImplement": false,
+    "canReadSourceFiles": false,
+    "canWriteCode": false
+  },
+  "roles": {
+    "DesignSpecialist": {
+      "model": "sonnet",
+      "responsibilities": ["Generacion de disenos via Stitch MCP", "Conversion HTML a codigo", "Design system"],
+      "fileOwnership": ["doc/design/"],
+      "priority": "FIRST"
+    },
+    "FlutterSpecialist": {
+      "model": "sonnet",
+      "responsibilities": ["Features Flutter (Cubit)", "Responsive layouts", "Widgets como clases separadas"],
+      "fileOwnership": ["lib/features/", "lib/core/", "lib/shared/"]
+    },
+    "QAReviewer": {
+      "model": "sonnet",
+      "responsibilities": ["Tests unitarios y widget", "Coverage 85%+", "Edge cases"],
+      "fileOwnership": ["test/"]
+    }
+  },
+  "qualityGates": {
+    "preCommit": {
+      "flutter": "dart fix --apply && dart analyze && flutter test"
+    },
+    "minCoverage": 85
+  }
+}

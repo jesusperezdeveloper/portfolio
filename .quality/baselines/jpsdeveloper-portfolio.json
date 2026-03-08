@@ -1,0 +1,62 @@
+{
+  "$schema": "quality-baseline-v1",
+  "project": "jpsdeveloper-portfolio",
+  "stack": "flutter",
+  "generatedAt": "2026-03-08T00:00:00.000Z",
+  "engineVersion": "3.9.1",
+  "lint": {
+    "errors": 0,
+    "warnings": 0,
+    "infos": 0,
+    "policy": "zero-tolerance",
+    "command": "dart analyze"
+  },
+  "coverage": {
+    "current": 0,
+    "baseline": 0,
+    "target": 85,
+    "policy": "ratchet",
+    "ratchetDirection": "up",
+    "command": "flutter test --coverage"
+  },
+  "tests": {
+    "total": 0,
+    "passing": 0,
+    "failing": 0,
+    "skipped": 0,
+    "policy": "no-regression",
+    "command": "flutter test"
+  },
+  "architecture": {
+    "layerViolations": 0,
+    "policy": "ratchet"
+  },
+  "deadCode": {
+    "count": 0,
+    "policy": "ratchet"
+  },
+  "deps": {
+    "outdated": 0,
+    "vulnerable": 0,
+    "policy": "info"
+  },
+  "acceptance": {
+    "criteria_total": 0,
+    "criteria_passed": 0,
+    "policy": "info"
+  },
+  "e2e": {
+    "total": 0,
+    "passing": 0,
+    "failing": 0,
+    "skipped": 0,
+    "viewports": ["desktop-chrome"],
+    "policy": "no-regression",
+    "reportPath": "doc/test_cases/reports/",
+    "command": "npx playwright test"
+  },
+  "plan": {
+    "sprints": [],
+    "currentSprint": 0
+  }
+}
