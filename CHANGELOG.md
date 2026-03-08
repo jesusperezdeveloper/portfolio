@@ -5,6 +5,53 @@ Todos los cambios notables de este proyecto se documentan en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/),
 y este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/).
 
+## [2.0.0] - 2026-03-08
+
+### Rediseno completo v2
+
+#### Agregado
+- Hero: parallax 3 capas (particulas 0.3x, formas flotantes 0.6x, contenido 1.0x)
+- Hero: efecto TextScramble para nombre (glitch caracter por caracter)
+- Hero: badge de disponibilidad con pulse rings animados
+- Hero: formas geometricas flotantes (hexagonos, circulos, triangulos) con rotacion 3D
+- About: stats con AnimatedCounter (conteo easeOutCubic + bounce al completar)
+- About: avatar con borde gradiente rotativo (SweepGradient animado)
+- About: fondo dot-grid con CustomPainter
+- Projects: carousel 3D con perspectiva y tilt al hover (max 15 grados)
+- Projects: cards con escala/opacidad diferenciada (activa vs laterales)
+- Experience: timeline vertical cinematica con nodos brillantes
+- Experience: cards alternantes izq/derecha en desktop, apiladas en mobile
+- Skills: tabs por categoria con pill indicator animado
+- Skills: progress bars con shimmer sweep al completar animacion
+- Skills: hover dimming (cards no-hovered al 40% opacidad)
+- Contact: formulario glassmorphism con blobs decorativos
+- Contact: floating label fields con glow cyan al focus
+- Contact: iconos sociales con spring scale al hover
+- Widget ScrollProgress: barra vertical gradiente cyan-violeta (desktop only)
+- Widget CursorGlow: resplandor radial 150px que sigue al cursor (desktop only)
+- Widget AnimatedCounter: conteo numerico con bounce final
+- Widget TextScramble: revelado de texto con simbolos aleatorios
+- Widget FloatingShapes: formas geometricas con glass effect y parallax
+
+#### Cambiado
+- Paleta de colores: backgroundDark #0a0a1a, cardDark #14142b, surfaceDark #111128
+- Gradiente triple accent: cyan #00d4ff -> indigo #6366f1 -> violeta #8b5cf6
+- AppBar: glassmorphism progresivo (blur 0-15 segun scroll)
+- AppBar: underline gradiente que crece desde el centro (hover/active)
+- AppBar: tracking de seccion activa por posicion de scroll
+- ParticleBackground: 120 particulas en 3 capas de profundidad con repulsion al mouse
+- ParticleBackground: lineas de conexion entre particulas cercanas
+- HomePage: integracion de CursorGlow, ScrollProgress y parallax offset
+- Todas las secciones: entry animations con VisibilityDetector y stagger delays
+
+#### Tecnico
+- 6 disenos Stitch generados como referencia (doc/design/redesign_v2/)
+- PRD con 8 User Stories y 35 criterios de aceptacion
+- VEG document con 3 pilares (Images, Motion, Design)
+- Plan de implementacion en 10 fases
+- flutter analyze: 0 issues
+- Build web release exitoso
+
 ## [1.0.6] - 2025-12-16
 
 ### Agregado
