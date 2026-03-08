@@ -35,6 +35,7 @@ class AppLocalizations {
     'es': {
       // Navigation
       'nav_home': 'Inicio',
+      'nav_about': 'Sobre Mí',
       'nav_projects': 'Proyectos',
       'nav_experience': 'Experiencia',
       'nav_skills': 'Habilidades',
@@ -43,12 +44,32 @@ class AppLocalizations {
       // Hero Section
       'hero_greeting': 'Hola, soy',
       'hero_name': 'Jesús Pérez',
-      'hero_role': 'Software Developer',
+      'hero_role': 'Senior Flutter Developer',
       'hero_tagline':
-          'Construyendo experiencias móviles hermosas y de alto rendimiento',
-      'hero_cta_contact': 'Contactar',
-      'hero_cta_projects': 'Ver Proyectos',
-      'hero_available': 'Disponible para proyectos',
+          'Transformo ideas en aplicaciones móviles excepcionales. '
+              '+10 años creando experiencias de alto rendimiento con Flutter y arquitectura limpia.',
+      'hero_cta_contact': 'Hablemos',
+      'hero_cta_projects': 'Ver Portfolio',
+      'hero_available': 'Disponible para nuevos proyectos',
+
+      // About Section
+      'about_title': 'Sobre Mí',
+      'about_subtitle': 'Conoce un poco más sobre mi trayectoria',
+      'about_description_1':
+          'Soy un desarrollador de software apasionado con más de 10 años de experiencia '
+              'creando aplicaciones móviles y soluciones tecnológicas innovadoras. '
+              'Mi especialidad es Flutter, donde combino rendimiento excepcional con interfaces elegantes.',
+      'about_description_2':
+          'He tenido el privilegio de trabajar con empresas de primer nivel como Accenture, '
+              'desarrollando aplicaciones con millones de usuarios activos. También he fundado '
+              'mis propios proyectos, lo que me ha dado una visión completa del ciclo de vida del software.',
+      'about_description_3':
+          'Mi filosofía es simple: código limpio, arquitectura sólida y experiencias de usuario excepcionales. '
+              'Creo firmemente en Clean Architecture y en las mejores prácticas que hacen que el software sea mantenible y escalable.',
+      'about_stats_years': 'Años de experiencia',
+      'about_stats_projects': 'Proyectos entregados',
+      'about_stats_technologies': 'Tecnologías clave',
+      'about_stats_languages': 'Idiomas hablados',
 
       // Projects Section
       'projects_title': 'Proyectos Destacados',
@@ -145,6 +166,7 @@ class AppLocalizations {
     'en': {
       // Navigation
       'nav_home': 'Home',
+      'nav_about': 'About',
       'nav_projects': 'Projects',
       'nav_experience': 'Experience',
       'nav_skills': 'Skills',
@@ -153,11 +175,32 @@ class AppLocalizations {
       // Hero Section
       'hero_greeting': "Hi, I'm",
       'hero_name': 'Jesús Pérez',
-      'hero_role': 'Software Developer',
-      'hero_tagline': 'Building beautiful, high-performance mobile experiences',
-      'hero_cta_contact': 'Contact Me',
-      'hero_cta_projects': 'View Projects',
-      'hero_available': 'Available for projects',
+      'hero_role': 'Senior Flutter Developer',
+      'hero_tagline':
+          'I transform ideas into exceptional mobile applications. '
+              '+10 years crafting high-performance experiences with Flutter and clean architecture.',
+      'hero_cta_contact': "Let's Talk",
+      'hero_cta_projects': 'View Portfolio',
+      'hero_available': 'Available for new projects',
+
+      // About Section
+      'about_title': 'About Me',
+      'about_subtitle': 'Learn a bit more about my journey',
+      'about_description_1':
+          "I'm a passionate software developer with over 10 years of experience "
+              'building mobile applications and innovative tech solutions. '
+              'My specialty is Flutter, where I combine exceptional performance with elegant interfaces.',
+      'about_description_2':
+          "I've had the privilege of working with top-tier companies like Accenture, "
+              'developing applications with millions of active users. I have also founded '
+              'my own projects, giving me a complete view of the software lifecycle.',
+      'about_description_3':
+          'My philosophy is simple: clean code, solid architecture, and exceptional user experiences. '
+              'I firmly believe in Clean Architecture and best practices that make software maintainable and scalable.',
+      'about_stats_years': 'Years of experience',
+      'about_stats_projects': 'Projects delivered',
+      'about_stats_technologies': 'Key technologies',
+      'about_stats_languages': 'Languages spoken',
 
       // Projects Section
       'projects_title': 'Featured Projects',
@@ -258,6 +301,7 @@ class AppLocalizations {
 
   // Accesores rápidos para traducciones comunes
   String get navHome => translate('nav_home');
+  String get navAbout => translate('nav_about');
   String get navProjects => translate('nav_projects');
   String get navExperience => translate('nav_experience');
   String get navSkills => translate('nav_skills');

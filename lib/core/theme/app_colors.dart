@@ -11,13 +11,17 @@ abstract class AppColors {
   static const Color secondaryStart = Color(0xFF6366f1);
   static const Color secondaryEnd = Color(0xFF8b5cf6);
 
-  // Backgrounds
-  static const Color backgroundDark = Color(0xFF0f0f23);
+  // Backgrounds — v2.0 deeper, more immersive
+  static const Color backgroundDark = Color(0xFF0a0a1a);
   static const Color backgroundLight = Color(0xFFF8FAFC);
-  static const Color surfaceDark = Color(0xFF1a1a2e);
+  static const Color surfaceDark = Color(0xFF111128);
   static const Color surfaceLight = Color(0xFFFFFFFF);
-  static const Color cardDark = Color(0xFF252540);
+  static const Color cardDark = Color(0xFF14142b);
   static const Color cardLight = Color(0xFFF1F5F9);
+
+  // Card border — subtle glass edge
+  static const Color cardBorderDark = Color(0x0FFFFFFF);
+  static const Color cardBorderLight = Color(0x14000000);
 
   // Text Colors
   static const Color textPrimaryDark = Color(0xFFFFFFFF);
@@ -57,11 +61,29 @@ abstract class AppColors {
     end: Alignment.bottomRight,
   );
 
+  // Triple accent gradient — signature v2.0
+  static const LinearGradient tripleAccentGradient = LinearGradient(
+    colors: [accent, secondaryStart, secondaryEnd],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  // Text gradient for stats and headings
+  static const LinearGradient textGradient = LinearGradient(
+    colors: [Color(0xFFFFFFFF), Color(0xFFa0a0b8)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+
+  // Glow colors
+  static const Color glowCyan = Color(0x6600d4ff);
+  static const Color glowViolet = Color(0x338b5cf6);
+
   static const LinearGradient heroGradient = LinearGradient(
     colors: [
+      Color(0xFF0a0a1a),
       Color(0xFF0f0f23),
-      Color(0xFF1a1a2e),
-      Color(0xFF16213e),
+      Color(0xFF14142b),
     ],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,

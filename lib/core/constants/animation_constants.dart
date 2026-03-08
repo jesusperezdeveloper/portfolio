@@ -56,20 +56,54 @@ abstract class AnimationConstants {
   static const double rotateSlight = 0.05;
   static const double rotate3D = 0.15;
 
-  // Configuración de partículas
-  static const int particleCount = 50;
-  static const double particleMinSize = 2;
-  static const double particleMaxSize = 6;
-  static const double particleMinSpeed = 0.5;
-  static const double particleMaxSpeed = 2;
+  // Configuracion de particulas — v2.0 enhanced
+  static const int particleCountDesktop = 120;
+  static const int particleCountTablet = 75;
+  static const int particleCountMobile = 50;
+  static const double particleMinSize = 1.5;
+  static const double particleMaxSize = 5;
+  static const double particleMinSpeed = 0.3;
+  static const double particleMaxSpeed = 1.5;
+  static const double particleConnectionDistance = 120;
+  static const double particleMouseRadius = 150;
 
-  // Tilt effect para tarjetas 3D
-  static const double maxTiltAngle = 0.1; // radianes
-  static const double tiltPerspective = 0.002;
+  // Tilt effect para tarjetas 3D — v2.0 enhanced
+  static const double maxTiltAngle = 0.26; // ~15 degrees
+  static const double tiltPerspective = 0.001;
 
   // Scroll animation triggers
   static const double scrollTriggerOffset = 0.2; // 20% visible
   static const double parallaxFactor = 0.3;
+  static const double parallaxLayerSlow = 0.3;
+  static const double parallaxLayerMid = 0.6;
+  static const double parallaxLayerFast = 1;
+
+  // Text scramble
+  static const Duration scrambleDuration = Duration(milliseconds: 1500);
+  static const Duration scrambleCharDelay = Duration(milliseconds: 40);
+
+  // Floating shapes
+  static const int floatingShapeCount = 8;
+  static const double floatingShapeMinSize = 40;
+  static const double floatingShapeMaxSize = 120;
+  static const Duration floatingShapeRotation = Duration(seconds: 20);
+
+  // Spring physics
+  static const double springDamping = 0.8;
+  static const double springStiffness = 200;
+
+  // Counter animation
+  static const Duration counterDuration = Duration(milliseconds: 2000);
+
+  // Stagger delays — v2.0
+  static const Duration staggerMicro = Duration(milliseconds: 50);
+  static const Duration staggerSmall = Duration(milliseconds: 100);
+  static const Duration staggerMedium = Duration(milliseconds: 150);
+
+  // Section padding (vertical) — generous v2.0
+  static const double sectionPaddingDesktop = 160;
+  static const double sectionPaddingTablet = 100;
+  static const double sectionPaddingMobile = 80;
 
   // Timing para secuencias del Hero
   static const Duration heroBackgroundStart = Duration.zero;

@@ -5,19 +5,38 @@ import 'package:portfolio_jps/core/localization/app_localizations.dart';
 import 'package:portfolio_jps/core/theme/app_colors.dart';
 import 'package:portfolio_jps/core/theme/app_spacing.dart';
 import 'package:portfolio_jps/core/utils/responsive.dart';
+import 'package:portfolio_jps/features/hero/presentation/widgets/floating_shapes.dart';
 import 'package:portfolio_jps/shared/widgets/animated_button.dart';
-import 'package:portfolio_jps/shared/widgets/code_peek/code_peek.dart';
 import 'package:portfolio_jps/shared/widgets/particle_background.dart';
+import 'package:portfolio_jps/shared/widgets/text_scramble.dart';
 
-class HeroSection extends StatelessWidget {
+/// Cinematic hero section with 3-layer parallax, text scramble effect,
+/// floating geometric shapes, and staggered entry animations.
+class HeroSection extends StatefulWidget {
   const HeroSection({
     super.key,
     this.onScrollToSection,
+    this.scrollOffset = 0,
   });
 
-  /// Callback to scroll to a specific section by index.
-  /// Index 1 = Projects, Index 4 = Contact
   final void Function(int index)? onScrollToSection;
+  final double scrollOffset;
+
+  @override
+  State<HeroSection> createState() => _HeroSectionState();
+}
+
+class _HeroSectionState extends State<HeroSection> {
+  bool _showScramble = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Delay scramble start for dramatic effect
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      if (mounted) setState(() => _showScramble = true);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,42 +50,59 @@ class HeroSection extends StatelessWidget {
       width: double.infinity,
       child: Stack(
         children: [
-          // Background gradient for light theme
-          if (!isDark)
-            const Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: AppColors.heroGradientLight,
-                ),
-              ),
-            ),
-          // Particle Background
-          const Positioned.fill(
-            child: CodePeekWrapper(
-              componentCode: ComponentCodes.particleBackground,
-              child: ParticleBackground(),
-            ),
-          ),
-          // Gradient Overlay
+          // Layer 0: Background gradient
           Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  radius: 1.5,
-                  colors: isDark
-                      ? [
-                          Colors.transparent,
-                          AppColors.backgroundDark.withValues(alpha: 0.8),
-                        ]
-                      : [
-                          Colors.transparent,
-                          AppColors.backgroundLight.withValues(alpha: 0.3),
-                        ],
-                ),
+                gradient: isDark
+                    ? AppColors.heroGradient
+                    : AppColors.heroGradientLight,
               ),
             ),
           ),
-          // Content
+
+          // Layer 1 (0.3x parallax): Particle field
+          Positioned.fill(
+            child: Transform.translate(
+              offset: Offset(0, widget.scrollOffset * 0.3),
+              child: const ParticleBackground(),
+            ),
+          ),
+
+          // Layer 2 (0.6x parallax): Floating geometric shapes
+          if (!isMobile)
+            Positioned.fill(
+              child: FloatingShapes(
+                scrollOffset: widget.scrollOffset,
+              ),
+            ),
+
+          // Radial glow behind content area
+          if (isDark)
+            Positioned(
+              left: isMobile
+                  ? MediaQuery.of(context).size.width * 0.2
+                  : MediaQuery.of(context).size.width * 0.15,
+              top: screenHeight * 0.3,
+              child: Container(
+                width: 500,
+                height: 500,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    colors: [
+                      AppColors.glowCyan,
+                      Colors.transparent,
+                    ],
+                    radius: 0.6,
+                  ),
+                ),
+              )
+                  .animate()
+                  .fadeIn(delay: 800.ms, duration: 1200.ms),
+            ),
+
+          // Layer 3 (1.0x): Content
           Center(
             child: Padding(
               padding: EdgeInsets.symmetric(
@@ -78,58 +114,73 @@ class HeroSection extends StatelessWidget {
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment:
-                      isMobile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+                  crossAxisAlignment: isMobile
+                      ? CrossAxisAlignment.center
+                      : CrossAxisAlignment.start,
                   children: [
-                    // Availability Badge
-                    CodePeekWrapper(
-                      componentCode: ComponentCodes.availabilityBadge,
-                      child: _buildAvailabilityBadge(context, l10n),
-                    )
+                    // Availability Badge with pulse rings
+                    _AvailabilityBadge(l10n: l10n)
                         .animate()
                         .fadeIn(delay: 500.ms, duration: 600.ms)
                         .slideY(begin: -0.3, end: 0),
+
                     const SizedBox(height: AppSpacing.lg),
+
                     // Greeting
                     Text(
                       l10n.heroGreeting,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: isDark ? AppColors.accent : AppColors.accentLight,
-                            fontWeight: FontWeight.w500,
-                          ),
-                      textAlign: isMobile ? TextAlign.center : TextAlign.start,
+                      style:
+                          Theme.of(context).textTheme.titleLarge?.copyWith(
+                                color: isDark
+                                    ? AppColors.accent
+                                    : AppColors.accentLight,
+                                fontWeight: FontWeight.w500,
+                              ),
+                      textAlign:
+                          isMobile ? TextAlign.center : TextAlign.start,
                     )
                         .animate()
                         .fadeIn(delay: 800.ms, duration: 600.ms)
                         .slideX(begin: -0.2, end: 0),
-                    const SizedBox(height: AppSpacing.sm),
-                    // Name
-                    Text(
-                      l10n.heroName,
+
+                    const SizedBox(height: AppSpacing.xs),
+
+                    // Name with scramble effect
+                    TextScramble(
+                      text: l10n.heroName,
+                      animate: _showScramble,
                       style: context.responsive(
-                        mobile: Theme.of(context).textTheme.displayMedium,
-                        tablet: Theme.of(context).textTheme.displayLarge,
-                        desktop: Theme.of(context).textTheme.displayLarge?.copyWith(
+                        mobile:
+                            Theme.of(context).textTheme.displayMedium,
+                        tablet:
+                            Theme.of(context).textTheme.displayLarge,
+                        desktop: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(
                               fontSize: 80,
+                              letterSpacing: -3,
                             ),
                       )?.copyWith(fontWeight: FontWeight.bold),
-                      textAlign: isMobile ? TextAlign.center : TextAlign.start,
-                    )
-                        .animate()
-                        .fadeIn(delay: 1000.ms, duration: 800.ms)
-                        .slideY(begin: 0.3, end: 0),
+                    ),
+
                     const SizedBox(height: AppSpacing.md),
+
                     // Role with typing effect
                     SizedBox(
                       height: 40,
                       child: DefaultTextStyle(
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
                                   color: isDark
                                       ? AppColors.textSecondaryDark
                                       : AppColors.textSecondaryLight,
                                 ) ??
                             const TextStyle(),
-                        textAlign: isMobile ? TextAlign.center : TextAlign.start,
+                        textAlign:
+                            isMobile ? TextAlign.center : TextAlign.start,
                         child: AnimatedTextKit(
                           repeatForever: true,
                           pause: const Duration(seconds: 3),
@@ -139,15 +190,19 @@ class HeroSection extends StatelessWidget {
                               speed: const Duration(milliseconds: 80),
                             ),
                             TypewriterAnimatedText(
-                              'Flutter Expert',
+                              'Flutter Specialist',
                               speed: const Duration(milliseconds: 80),
                             ),
                             TypewriterAnimatedText(
-                              'Mobile Developer',
+                              'Clean Architecture Advocate',
                               speed: const Duration(milliseconds: 80),
                             ),
                             TypewriterAnimatedText(
-                              'Clean Architecture',
+                              'Mobile Craftsman',
+                              speed: const Duration(milliseconds: 80),
+                            ),
+                            TypewriterAnimatedText(
+                              'Performance Obsessed',
                               speed: const Duration(milliseconds: 80),
                             ),
                           ],
@@ -155,54 +210,85 @@ class HeroSection extends StatelessWidget {
                       ),
                     )
                         .animate()
-                        .fadeIn(delay: 1500.ms, duration: 600.ms),
+                        .fadeIn(delay: 2500.ms, duration: 600.ms),
+
                     const SizedBox(height: AppSpacing.lg),
+
                     // Tagline
                     SizedBox(
                       width: isMobile ? double.infinity : 600,
                       child: Text(
                         l10n.heroTagline,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(
                               color: isDark
                                   ? AppColors.textSecondaryDark
                                   : AppColors.textSecondaryLight,
-                              height: 1.6,
+                              height: 1.7,
                             ),
-                        textAlign: isMobile ? TextAlign.center : TextAlign.start,
+                        textAlign:
+                            isMobile ? TextAlign.center : TextAlign.start,
                       ),
                     )
                         .animate()
                         .fadeIn(delay: 1800.ms, duration: 600.ms)
                         .slideY(begin: 0.2, end: 0),
+
                     const SizedBox(height: AppSpacing.xxl),
-                    // CTA Buttons
+
+                    // CTA Buttons with materialize effect
                     Wrap(
                       spacing: AppSpacing.md,
                       runSpacing: AppSpacing.md,
-                      alignment: isMobile ? WrapAlignment.center : WrapAlignment.start,
+                      alignment: isMobile
+                          ? WrapAlignment.center
+                          : WrapAlignment.start,
                       children: [
-                        CodePeekWrapper(
-                          componentCode: ComponentCodes.animatedButton,
-                          child: AnimatedButton(
-                            text: l10n.heroCtaContact,
-                            onPressed: () => onScrollToSection?.call(4),
-                            icon: Icons.send,
-                          ),
+                        AnimatedButton(
+                          text: l10n.heroCtaContact,
+                          onPressed: () =>
+                              widget.onScrollToSection?.call(5),
+                          icon: Icons.send,
                         )
                             .animate()
-                            .fadeIn(delay: 2200.ms, duration: 600.ms)
-                            .slideY(begin: 0.3, end: 0),
-                        CodePeekWrapper(
-                          componentCode: ComponentCodes.animatedButton,
-                          child: AnimatedButton(
-                            text: l10n.heroCtaProjects,
-                            variant: ButtonVariant.outline,
-                            onPressed: () => onScrollToSection?.call(1),
-                            icon: Icons.work_outline,
-                          ),
+                            .fadeIn(delay: 2200.ms, duration: 500.ms)
+                            .scaleXY(
+                              begin: 0.8,
+                              end: 1,
+                              delay: 2200.ms,
+                              duration: 500.ms,
+                              curve: Curves.easeOutBack,
+                            )
+                            .blurXY(
+                              begin: 5,
+                              end: 0,
+                              delay: 2200.ms,
+                              duration: 400.ms,
+                            ),
+                        AnimatedButton(
+                          text: l10n.heroCtaProjects,
+                          variant: ButtonVariant.outline,
+                          onPressed: () =>
+                              widget.onScrollToSection?.call(2),
+                          icon: Icons.work_outline,
                         )
                             .animate()
-                            .fadeIn(delay: 2400.ms, duration: 600.ms),
+                            .fadeIn(delay: 2400.ms, duration: 500.ms)
+                            .scaleXY(
+                              begin: 0.8,
+                              end: 1,
+                              delay: 2400.ms,
+                              duration: 500.ms,
+                              curve: Curves.easeOutBack,
+                            )
+                            .blurXY(
+                              begin: 5,
+                              end: 0,
+                              delay: 2400.ms,
+                              duration: 400.ms,
+                            ),
                       ],
                     ),
                   ],
@@ -210,27 +296,65 @@ class HeroSection extends StatelessWidget {
               ),
             ),
           ),
+
           // Scroll indicator
           Positioned(
             bottom: 40,
             left: 0,
             right: 0,
             child: Center(
-              child: _buildScrollIndicator(isDark)
-                  .animate(onPlay: (controller) => controller.repeat())
-                  .slideY(
-                    begin: 0,
-                    end: 0.3,
-                    duration: 1.seconds,
-                    curve: Curves.easeInOut,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.keyboard_arrow_down,
+                    color: isDark
+                        ? AppColors.textMutedDark
+                        : AppColors.textMutedLight,
+                    size: 28,
                   )
-                  .then()
-                  .slideY(
-                    begin: 0.3,
-                    end: 0,
-                    duration: 1.seconds,
-                    curve: Curves.easeInOut,
-                  ),
+                      .animate(
+                        onPlay: (controller) => controller.repeat(),
+                      )
+                      .slideY(
+                        begin: 0,
+                        end: 0.4,
+                        duration: 1200.ms,
+                        curve: Curves.easeInOut,
+                      )
+                      .then()
+                      .slideY(
+                        begin: 0.4,
+                        end: 0,
+                        duration: 1200.ms,
+                        curve: Curves.easeInOut,
+                      ),
+                  const SizedBox(height: 4),
+                  Container(
+                    width: 1.5,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          (isDark
+                                  ? AppColors.textMutedDark
+                                  : AppColors.textMutedLight)
+                              .withValues(alpha: 0.5),
+                          Colors.transparent,
+                        ],
+                      ),
+                    ),
+                  )
+                      .animate(
+                        onPlay: (controller) => controller.repeat(),
+                      )
+                      .fadeIn(duration: 1200.ms)
+                      .then()
+                      .fadeOut(duration: 1200.ms),
+                ],
+              ),
             ),
           )
               .animate()
@@ -239,35 +363,56 @@ class HeroSection extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildAvailabilityBadge(BuildContext context, AppLocalizations l10n) {
+/// Availability badge with animated pulse rings.
+class _AvailabilityBadge extends StatelessWidget {
+  const _AvailabilityBadge({required this.l10n});
+
+  final AppLocalizations l10n;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
       ),
       decoration: BoxDecoration(
-        color: AppColors.success.withValues(alpha: 0.15),
+        color: AppColors.success.withValues(alpha: 0.12),
         borderRadius: AppSpacing.borderRadiusFull,
         border: Border.all(
-          color: AppColors.success.withValues(alpha: 0.3),
+          color: AppColors.success.withValues(alpha: 0.25),
         ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: const BoxDecoration(
-              color: AppColors.success,
-              shape: BoxShape.circle,
+          // Pulsing dot with rings
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Ring 3 (outermost)
+                _PulseRing(delay: 0.ms, size: 20),
+                // Ring 2
+                _PulseRing(delay: 400.ms, size: 16),
+                // Ring 1
+                _PulseRing(delay: 800.ms, size: 12),
+                // Core dot
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.success,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ],
             ),
-          )
-              .animate(onPlay: (controller) => controller.repeat())
-              .fadeIn(duration: 1.seconds)
-              .then()
-              .fadeOut(duration: 1.seconds),
+          ),
           const SizedBox(width: AppSpacing.sm),
           Text(
             l10n.heroAvailable,
@@ -281,17 +426,31 @@ class HeroSection extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildScrollIndicator(bool isDark) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.keyboard_arrow_down,
-          color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight,
-          size: 32,
+class _PulseRing extends StatelessWidget {
+  const _PulseRing({required this.delay, required this.size});
+
+  final Duration delay;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: AppColors.success.withValues(alpha: 0.4),
+          width: 1.5,
         ),
-      ],
-    );
+      ),
+    )
+        .animate(onPlay: (c) => c.repeat())
+        .fadeIn(delay: delay, duration: 800.ms)
+        .scaleXY(begin: 0.5, end: 1, delay: delay, duration: 1500.ms)
+        .then()
+        .fadeOut(duration: 800.ms);
   }
 }

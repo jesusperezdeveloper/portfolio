@@ -1,23 +1,14 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:portfolio_jps/core/constants/animation_constants.dart';
 import 'package:portfolio_jps/core/theme/app_colors.dart';
+import 'package:portfolio_jps/core/utils/responsive.dart';
 
+/// Enhanced 3D particle field with depth layers, mouse interaction,
+/// and connection lines. Particles react to cursor with repulsion effect.
 class ParticleBackground extends StatefulWidget {
-  const ParticleBackground({
-    this.particleCount = 50,
-    this.particleColor,
-    this.lineColor,
-    this.enableLines = true,
-    this.lineDistance = 150,
-    super.key,
-  });
-
-  final int particleCount;
-  final Color? particleColor;
-  final Color? lineColor;
-  final bool enableLines;
-  final double lineDistance;
+  const ParticleBackground({super.key});
 
   @override
   State<ParticleBackground> createState() => _ParticleBackgroundState();
@@ -26,10 +17,11 @@ class ParticleBackground extends StatefulWidget {
 class _ParticleBackgroundState extends State<ParticleBackground>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late List<Particle> _particles;
+  late List<_Particle> _particles;
   final _random = math.Random();
   Size _size = Size.zero;
   Offset? _mousePosition;
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -47,56 +39,86 @@ class _ParticleBackgroundState extends State<ParticleBackground>
     super.dispose();
   }
 
-  void _initParticles(Size size) {
-    if (_size == size) return;
-    _size = size;
+  int _particleCount(BuildContext context) {
+    if (Responsive.isMobile(context)) {
+      return AnimationConstants.particleCountMobile;
+    }
+    if (Responsive.isTablet(context)) {
+      return AnimationConstants.particleCountTablet;
+    }
+    return AnimationConstants.particleCountDesktop;
+  }
 
-    _particles = List.generate(widget.particleCount, (_) {
-      return Particle(
+  void _initParticles(Size size, int count) {
+    if (_initialized && _size == size) return;
+    _size = size;
+    _initialized = true;
+
+    _particles = List.generate(count, (_) {
+      final layer = _random.nextInt(3); // 0=far, 1=mid, 2=near
+      final layerScale = 0.4 + layer * 0.3; // 0.4, 0.7, 1.0
+      return _Particle(
         x: _random.nextDouble() * size.width,
         y: _random.nextDouble() * size.height,
-        vx: (_random.nextDouble() - 0.5) * 0.5,
-        vy: (_random.nextDouble() - 0.5) * 0.5,
-        radius: _random.nextDouble() * 2 + 1,
-        opacity: _random.nextDouble() * 0.5 + 0.2,
+        vx: (_random.nextDouble() - 0.5) * 0.4 * layerScale,
+        vy: (_random.nextDouble() - 0.5) * 0.4 * layerScale,
+        radius: (AnimationConstants.particleMinSize +
+                _random.nextDouble() *
+                    (AnimationConstants.particleMaxSize -
+                        AnimationConstants.particleMinSize)) *
+            layerScale,
+        opacity: (0.15 + _random.nextDouble() * 0.4) * layerScale,
+        layer: layer,
+        color: layer == 2
+            ? AppColors.accent
+            : layer == 1
+                ? AppColors.secondaryStart
+                : AppColors.secondaryEnd,
       );
     });
   }
 
   void _updateParticles() {
-    for (final particle in _particles) {
-      particle
-        ..x += particle.vx
-        ..y += particle.vy;
+    const mouseRadius = AnimationConstants.particleMouseRadius;
+    const maxSpeed = AnimationConstants.particleMaxSpeed;
 
-      // Bounce off edges
-      if (particle.x < 0 || particle.x > _size.width) {
-        particle.vx *= -1;
-      }
-      if (particle.y < 0 || particle.y > _size.height) {
-        particle.vy *= -1;
-      }
+    for (final p in _particles) {
+      p
+        ..x += p.vx
+        ..y += p.vy;
 
-      // Mouse interaction
+      // Wrap around edges
+      if (p.x < -10) p.x = _size.width + 10;
+      if (p.x > _size.width + 10) p.x = -10;
+      if (p.y < -10) p.y = _size.height + 10;
+      if (p.y > _size.height + 10) p.y = -10;
+
+      // Mouse repulsion
       if (_mousePosition != null) {
-        final dx = _mousePosition!.dx - particle.x;
-        final dy = _mousePosition!.dy - particle.y;
-        final distance = math.sqrt(dx * dx + dy * dy);
+        final dx = p.x - _mousePosition!.dx;
+        final dy = p.y - _mousePosition!.dy;
+        final dist = math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 100) {
-          final force = (100 - distance) / 100;
-          particle
-            ..vx -= dx * force * 0.01
-            ..vy -= dy * force * 0.01;
+        if (dist < mouseRadius && dist > 0) {
+          final force = (mouseRadius - dist) / mouseRadius;
+          final forceScale = force * force * 0.08;
+          p
+            ..vx += (dx / dist) * forceScale
+            ..vy += (dy / dist) * forceScale;
         }
       }
 
+      // Damping
+      p
+        ..vx *= 0.99
+        ..vy *= 0.99;
+
       // Limit velocity
-      final speed = math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
-      if (speed > 2) {
-        particle
-          ..vx = (particle.vx / speed) * 2
-          ..vy = (particle.vy / speed) * 2;
+      final speed = math.sqrt(p.vx * p.vx + p.vy * p.vy);
+      if (speed > maxSpeed) {
+        p
+          ..vx = (p.vx / speed) * maxSpeed
+          ..vy = (p.vy / speed) * maxSpeed;
       }
     }
   }
@@ -104,35 +126,27 @@ class _ParticleBackgroundState extends State<ParticleBackground>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final particleColor = widget.particleColor ??
-        (isDark ? AppColors.accent : AppColors.accentDark);
-    final lineColor = widget.lineColor ??
-        particleColor.withValues(alpha: 0.1);
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        _initParticles(Size(constraints.maxWidth, constraints.maxHeight));
+        final size = Size(constraints.maxWidth, constraints.maxHeight);
+        _initParticles(size, _particleCount(context));
 
         return MouseRegion(
-          onHover: (event) {
-            _mousePosition = event.localPosition;
-          },
-          onExit: (_) {
-            _mousePosition = null;
-          },
+          onHover: (event) => _mousePosition = event.localPosition,
+          onExit: (_) => _mousePosition = null,
           child: AnimatedBuilder(
             animation: _controller,
-            builder: (context, child) {
+            builder: (context, _) {
               _updateParticles();
               return CustomPaint(
-                size: Size(constraints.maxWidth, constraints.maxHeight),
+                size: size,
                 painter: _ParticlePainter(
                   particles: _particles,
-                  particleColor: particleColor,
-                  lineColor: lineColor,
-                  enableLines: widget.enableLines,
-                  lineDistance: widget.lineDistance,
                   mousePosition: _mousePosition,
+                  isDark: isDark,
+                  connectionDistance:
+                      AnimationConstants.particleConnectionDistance,
                 ),
               );
             },
@@ -143,14 +157,16 @@ class _ParticleBackgroundState extends State<ParticleBackground>
   }
 }
 
-class Particle {
-  Particle({
+class _Particle {
+  _Particle({
     required this.x,
     required this.y,
     required this.vx,
     required this.vy,
     required this.radius,
     required this.opacity,
+    required this.layer,
+    required this.color,
   });
 
   double x;
@@ -159,78 +175,86 @@ class Particle {
   double vy;
   double radius;
   double opacity;
+  int layer;
+  Color color;
 }
 
 class _ParticlePainter extends CustomPainter {
   _ParticlePainter({
     required this.particles,
-    required this.particleColor,
-    required this.lineColor,
-    required this.enableLines,
-    required this.lineDistance,
+    required this.isDark,
+    required this.connectionDistance,
     this.mousePosition,
   });
 
-  final List<Particle> particles;
-  final Color particleColor;
-  final Color lineColor;
-  final bool enableLines;
-  final double lineDistance;
+  final List<_Particle> particles;
   final Offset? mousePosition;
+  final bool isDark;
+  final double connectionDistance;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final particlePaint = Paint()..style = PaintingStyle.fill;
+    if (!isDark) {
+      _paintLight(canvas, size);
+      return;
+    }
+
     final linePaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.5;
+    final dotPaint = Paint()..style = PaintingStyle.fill;
 
-    // Draw lines between nearby particles
-    if (enableLines) {
-      for (var i = 0; i < particles.length; i++) {
-        for (var j = i + 1; j < particles.length; j++) {
-          final dx = particles[i].x - particles[j].x;
-          final dy = particles[i].y - particles[j].y;
-          final distance = math.sqrt(dx * dx + dy * dy);
+    // Draw connection lines (only between nearby particles in same/adjacent layers)
+    for (var i = 0; i < particles.length; i++) {
+      final a = particles[i];
+      for (var j = i + 1; j < particles.length; j++) {
+        final b = particles[j];
+        if ((a.layer - b.layer).abs() > 1) continue;
 
-          if (distance < lineDistance) {
-            final opacity = (1 - distance / lineDistance) * 0.3;
-            linePaint.color = lineColor.withValues(alpha: opacity);
-            canvas.drawLine(
-              Offset(particles[i].x, particles[i].y),
-              Offset(particles[j].x, particles[j].y),
-              linePaint,
-            );
-          }
+        final dx = a.x - b.x;
+        final dy = a.y - b.y;
+        final dist = math.sqrt(dx * dx + dy * dy);
+
+        if (dist < connectionDistance) {
+          final alpha = (1 - dist / connectionDistance) * 0.15;
+          linePaint.color = a.color.withValues(alpha: alpha);
+          canvas.drawLine(Offset(a.x, a.y), Offset(b.x, b.y), linePaint);
         }
+      }
 
-        // Draw line to mouse
-        if (mousePosition != null) {
-          final dx = particles[i].x - mousePosition!.dx;
-          final dy = particles[i].y - mousePosition!.dy;
-          final distance = math.sqrt(dx * dx + dy * dy);
-
-          if (distance < lineDistance * 1.5) {
-            final opacity = (1 - distance / (lineDistance * 1.5)) * 0.5;
-            linePaint.color = particleColor.withValues(alpha: opacity);
-            canvas.drawLine(
-              Offset(particles[i].x, particles[i].y),
-              mousePosition!,
-              linePaint,
-            );
-          }
+      // Lines to mouse
+      if (mousePosition != null) {
+        final dx = a.x - mousePosition!.dx;
+        final dy = a.y - mousePosition!.dy;
+        final dist = math.sqrt(dx * dx + dy * dy);
+        if (dist < connectionDistance * 1.5) {
+          final alpha = (1 - dist / (connectionDistance * 1.5)) * 0.25;
+          linePaint.color = AppColors.accent.withValues(alpha: alpha);
+          canvas.drawLine(Offset(a.x, a.y), mousePosition!, linePaint);
         }
       }
     }
 
-    // Draw particles
-    for (final particle in particles) {
-      particlePaint.color = particleColor.withValues(alpha: particle.opacity);
-      canvas.drawCircle(
-        Offset(particle.x, particle.y),
-        particle.radius,
-        particlePaint,
-      );
+    // Draw particles with glow for near-layer
+    for (final p in particles) {
+      dotPaint.color = p.color.withValues(alpha: p.opacity);
+      canvas.drawCircle(Offset(p.x, p.y), p.radius, dotPaint);
+
+      // Glow for near-layer particles
+      if (p.layer == 2) {
+        dotPaint.color = p.color.withValues(alpha: p.opacity * 0.3);
+        canvas.drawCircle(Offset(p.x, p.y), p.radius * 2.5, dotPaint);
+      }
+    }
+  }
+
+  void _paintLight(Canvas canvas, Size size) {
+    final dotPaint = Paint()..style = PaintingStyle.fill;
+
+    for (final p in particles) {
+      const color = AppColors.accentLight;
+      dotPaint.color = color.withValues(alpha: p.opacity * 0.4);
+      canvas.drawCircle(Offset(p.x, p.y), p.radius * 0.8, dotPaint);
     }
   }
 

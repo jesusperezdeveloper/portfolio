@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Jesús Pérez Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00d4ff",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0A0A1A",
+                        "background-darker": "#14142B",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-body min-h-screen selection:bg-primary/30">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-gradient-to-b from-background-dark to-background-darker" data-alt="Dark gradient background with subtle nebula glow">
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(0,212,255,0.1)_0%,transparent_50%),radial-gradient(circle_at_bottom_left,rgba(138,43,226,0.05)_0%,transparent_50%)] pointer-events-none"></div>
+<div class="layout-container flex h-full grow flex-col relative z-10 w-full max-w-[1440px] mx-auto">
+<header class="flex items-center justify-between whitespace-nowrap px-8 py-6 w-full max-w-[1200px] mx-auto">
+<div class="flex items-center gap-4 text-white group cursor-pointer">
+<div class="relative flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(0,212,255,0.2)] group-hover:shadow-[0_0_25px_rgba(0,212,255,0.4)] transition-all duration-300">
+<span class="font-display font-bold text-xl text-primary tracking-tighter">JP</span>
+</div>
+</div>
+<div class="hidden md:flex flex-1 justify-center gap-8">
+<nav class="flex items-center gap-8 bg-white/5 backdrop-blur-md px-8 py-3 rounded-full border border-white/10">
+<a class="text-white/60 hover:text-white text-[15px] font-display font-medium leading-normal transition-colors" href="#">About</a>
+<a class="text-white/60 hover:text-white text-[15px] font-display font-medium leading-normal transition-colors" href="#">Projects</a>
+<a class="text-white/60 hover:text-white text-[15px] font-display font-medium leading-normal transition-colors" href="#">Experience</a>
+<a class="text-white/60 hover:text-white text-[15px] font-display font-medium leading-normal transition-colors" href="#">Skills</a>
+<a class="text-white/60 hover:text-white text-[15px] font-display font-medium leading-normal transition-colors" href="#">Contact</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 transition-colors">
+<span class="font-display text-xs font-bold">ES</span>
+</button>
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 transition-colors">
+<span class="material-symbols-outlined text-[20px]">light_mode</span>
+</button>
+<button class="hidden lg:flex items-center justify-center rounded-xl h-10 px-5 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/30 text-sm font-display font-bold transition-all shadow-[0_0_10px_rgba(0,212,255,0.1)] hover:shadow-[0_0_15px_rgba(0,212,255,0.2)]">
+                        View Source
+                    </button>
+</div>
+</header>
+<main class="flex-1 flex items-center justify-center w-full max-w-[1200px] mx-auto px-8 py-12 relative">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 hidden lg:block opacity-60 pointer-events-none">
+<div class="relative w-[500px] h-[500px]">
+<div class="absolute top-10 right-20 w-32 h-32 rounded-full border border-primary/30 bg-primary/5 backdrop-blur-sm animate-[pulse_4s_ease-in-out_infinite]"></div>
+<div class="absolute bottom-20 right-40 w-40 h-40 rotate-45 border border-purple-500/30 bg-purple-500/5 backdrop-blur-sm"></div>
+<div class="absolute top-1/2 left-20 w-24 h-24 rotate-12 bg-white/5 border border-white/10 backdrop-blur-md rounded-lg"></div>
+</div>
+</div>
+<div class="flex flex-col gap-6 text-left w-full lg:w-[65%] z-10">
+<div class="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 w-max backdrop-blur-sm">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+</span>
+<span class="text-white/80 text-sm font-medium">Available for new projects</span>
+</div>
+<div class="flex flex-col gap-2">
+<p class="text-primary font-display text-[22px] font-medium tracking-wide">Hello, I'm</p>
+<h1 class="text-white text-[60px] md:text-[80px] font-black font-display leading-[1.1] tracking-[-3px]">
+                            Jesús Pérez
+                        </h1>
+<div class="flex items-center gap-2 mt-2">
+<h2 class="text-[#A0A0B8] font-display text-2xl md:text-[28px] font-semibold">
+                                Senior Flutter Developer
+                            </h2>
+<span class="inline-block w-[3px] h-[30px] bg-primary animate-[pulse_1s_ease-in-out_infinite]"></span>
+</div>
+</div>
+<p class="text-white/60 font-body text-lg leading-relaxed max-w-[600px] mt-4">
+                        Crafting premium, high-performance cross-platform applications. With over 5 years of specialized experience in the Flutter ecosystem, I build digital experiences that live at the intersection of beautiful design and robust engineering.
+                    </p>
+<div class="flex flex-wrap gap-4 mt-8">
+<button class="flex items-center justify-center rounded-xl h-14 px-8 bg-primary text-[#0A0A1A] text-base font-display font-bold tracking-wide shadow-[0_0_20px_rgba(0,212,255,0.4)] hover:shadow-[0_0_30px_rgba(0,212,255,0.6)] hover:bg-white transition-all duration-300">
+                            Let's Talk
+                        </button>
+<button class="flex items-center justify-center rounded-xl h-14 px-8 bg-transparent border border-white/20 text-white text-base font-display font-bold tracking-wide hover:bg-white/5 hover:border-white/40 transition-all duration-300 gap-2">
+                            View Projects
+                            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-60 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="text-white/60 font-display text-sm uppercase tracking-widest">Scroll to explore</span>
+<span class="material-symbols-outlined text-white/60 animate-bounce">keyboard_arrow_down</span>
+</div>
+</div>
+</div>
+</body></html>
